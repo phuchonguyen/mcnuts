@@ -1,0 +1,18 @@
+Package: mcnuts
+Type: Package
+Title: Some Gradient-based MCMC Algorithms
+Version: 0.1.0
+Authors@R: person("Phuc", "Nguyen", email="phuc.nguyen@duke.edu", role=c("aut", "cre"))
+Maintainer: Phuc Nguyen <phuc.nguyen@duke.edu>
+Description: This package implements Hamiltonion Monte Carlo and the No-U-Turn Sampler
+    for easy integration into a custom MCMC algorithm that might, for example, 
+    include Gibbs steps.
+License: GPL (>=2)
+Encoding: UTF-8
+LazyData: true
+Imports:
+    foreach,
+    doParallel,
+    rstan,
+    abind
+RoxygenNote: 7.1.1

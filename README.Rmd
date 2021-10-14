@@ -1,0 +1,105 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# mcnuts
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of mcnuts is to provide implementation of one iteration of Hamiltonian Monte Carlo and the No-U-Turn Sampler for easy integration into a custom MCMC algorithm that might, for example, include Gibbs steps.
+
+**References**:
+
+  - Betancourt, M. (2018). A Conceptual Introduction to Hamiltonian Monte Carlo.
+
+  - Hoffman, M.D., & Gelman, A. (2014). The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo. Journal of Machine Learning Research. 
+
+  - Gelman, A., Carlin, J.B., Stern, H.S., Dunson, D.B., Vehtari, A., & Rubin, D.B. (2013). Bayesian Data Analysis (3rd ed.). Chapman and Hall/CRC. https://doi.org/10.1201/b16018
+
+## Installation
+
+You can install the released version of mcnuts from [CRAN](https://CRAN.R-project.org) with:
+
+``` r
+install.packages("mcnuts")
+```
+
+## Example
+
+This is a basic example of how to fit a hierarchical mean model using NUTS. The example is taken from Gelman et. al. 2013.
+
+```{r load-lib}
+library(mcnuts)
+```
+### Make synthetic data
+
+```{r make-dat}
+J = 8
+sigma = 2
+mu = 50
+tau = 15
+alpha = rnorm(J, mu, tau)
+y = MASS::mvrnorm(100, alpha, diag(sigma^2, J))
+y = colMeans(y)
+```
+
+### Define the log posterior density and gradient for the model
+
+```{r log-p}
+# Log posterior density
+log_p_th = function(th) {
+  J = length(th)-2
+  theta = th[1:J]
+  mu = th[J+1]
+  tau = th[J+2]
+  if (is.na(tau) | tau<=0)  # returns zero if tau is negative
+    return(-Inf)
+  else{
+    log_hyperprior = 1
+    log_prior = sum(dnorm(theta, mu, tau, log=TRUE))
+    log_likelihood = sum(dnorm(y, theta, sigma, log=TRUE))
+    return(sum(log_hyperprior, log_prior, log_likelihood))
+  }
+}
+# Gradient th
+gradient_th = function(th){
+  J = length(th) - 2
+  theta = th[1:J]
+  mu = th[J+1]
+  tau = th[J+2]
+  if (tau <= 0 | is.na(tau))
+    return(rep(0, length(th)))
+  else{
+    d_theta = -(theta - y)/sigma^2 - (theta-mu)/tau^2
+    d_mu = -sum(mu-theta)/tau^2
+    d_tau = -J/tau + sum((mu-theta)^2)/tau^3
+    return(c(d_theta, d_mu, d_tau))
+  }
+}
+```
+
+### Run NUTS
+```{r nuts}
+parameter_names = c(paste0("theta[",1:8,"]"), "mu", "tau")
+d = length(parameter_names)
+chains = 4
+mass_vector = c(rep(1/15^2, d-2), 1/5, 1/10)
+starts = array(NA, c(chains, d), dimnames = list(NULL, parameter_names))
+for (j in 1:chains){
+  starts[j,] = rnorm(d, 0, 15)
+  starts[j,10] = runif(1, 0, 15)
+}
+out = nuts_run_parallel(log_p_th, gradient_th, starting_values = starts, iter = 2000, M = mass_vector)
+```
