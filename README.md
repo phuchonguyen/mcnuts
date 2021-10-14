@@ -27,11 +27,10 @@ steps.
 
 ## Installation
 
-You can install the released version of mcnuts from
-[CRAN](https://CRAN.R-project.org) with:
+You can install the working development version through GitHub
 
 ``` r
-install.packages("mcnuts")
+devtools::install_github("phuchonguyen/mcnuts")
 ```
 
 ## Example
@@ -107,20 +106,20 @@ out = nuts_run_parallel(log_p_th, gradient_th, starting_values = starts, iter = 
 #> Inference for the input samples (4 chains: each with iter = 2000; warmup = 1000):
 #> 
 #>            Q5  Q50  Q95 Mean  SD  Rhat Bulk_ESS Tail_ESS
-#> theta[1] 46.1 49.4 52.7 49.4 2.0  1.00     6841     2237
-#> theta[2] 40.6 43.9 47.2 43.9 2.0  1.00     6655     2333
-#> theta[3] 50.7 53.9 57.2 53.9 2.0  1.00     6661     2586
-#> theta[4] 54.4 57.7 61.1 57.7 2.0  1.00     6772     2236
-#> theta[5] 36.1 39.1 42.3 39.2 1.9  1.00     6986     2291
-#> theta[6] 51.7 55.1 58.3 55.0 2.0  1.00     7403     2031
-#> theta[7] 75.5 78.7 82.1 78.7 2.0  1.00     6042     2149
-#> theta[8] 68.8 72.0 75.1 72.0 1.9  1.00     5790     2482
-#> mu       46.4 56.3 66.5 56.3 6.1  1.04      131      200
-#> tau       9.9 15.5 27.5 16.8 5.9  1.01      214      220
+#> theta[1] 66.8 69.9 73.0 69.9 1.9  1.00     4062     2485
+#> theta[2] 38.0 41.2 44.4 41.2 2.0  1.00     5098     2325
+#> theta[3] 39.3 42.5 45.7 42.5 2.0  1.00     7423     2821
+#> theta[4] 39.5 42.6 45.9 42.6 1.9  1.00     5754     2606
+#> theta[5] 47.6 50.7 53.9 50.7 1.9  1.00     7387     2844
+#> theta[6] 57.2 60.5 63.6 60.4 1.9  1.01     6301     2482
+#> theta[7] 50.7 53.9 57.2 53.9 2.0  1.00     5494     2617
+#> theta[8] 56.1 59.4 62.6 59.4 2.0  1.00     5755     2523
+#> mu       44.3 53.0 62.3 53.1 5.4  1.01      216      290
+#> tau       7.6 12.4 22.7 13.7 5.7  1.04      152      121
 #> 
 #> For each parameter, Bulk_ESS and Tail_ESS are crude measures of 
 #> effective sample size for bulk and tail quantities respectively (an ESS > 100 
 #> per chain is considered good), and Rhat is the potential scale reduction 
 #> factor on rank normalized split chains (at convergence, Rhat <= 1.05).
-#> Avg trajectory length 0.73 0.79 0.77 0.79
+#> Avg trajectory length 0.71 0.78 0.67 0.67
 ```

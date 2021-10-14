@@ -30,10 +30,10 @@ The goal of mcnuts is to provide implementation of one iteration of Hamiltonian 
 
 ## Installation
 
-You can install the released version of mcnuts from [CRAN](https://CRAN.R-project.org) with:
+You can install the working development version through GitHub
 
 ``` r
-install.packages("mcnuts")
+devtools::install_github("phuchonguyen/mcnuts")
 ```
 
 ## Example
